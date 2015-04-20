@@ -1,0 +1,9 @@
+Usage: essi [-cfhnsmbe FILENAME]
+  -c --cpp-output             : Output cpp version of the analysis done.
+  -f --filename [FILENAME]    : Include and run FILENAME.
+  -h --help                   : Print this message.
+  -n --no-interactive         : Disable interactive mode.
+  -s --set-variable           : Set a variable from the command line.
+  -d --dry-run                : Do not execute ESSI API calls  Just parse.
+  -m --model-name [NAME]      : Set the model name from the command line.
+  -b --binary-output          : The output generated will be in binary instead of plain text.

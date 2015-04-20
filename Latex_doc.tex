@@ -9,6 +9,7 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \definecolor{ltgray}{rgb}{0.98,0.98,0.98}
+\definecolor{grayish}{rgb}{0.85, 0.85, 0.85}
 
 \lstset{frame=single,
   backgroundcolor=\color{ltgray},
@@ -45,9 +46,9 @@ since the language was developed in C using YACC and LEX tool, a lot of similari
 
 \begin{itemize}
   \item[$\bullet$] Finite Element Analysis (FEA) is unitless, i.e. the calculations are carried out without any reference unit system. It is the user who should take care of the correctness of units. This feature ensures the user to keep an eye on units enabling them to catch the common mistakes which usually mess up with the results.  
-  \item[$\bullet$] It provides modularity through the include directive/commands as in C which allows complex analysis cases to be parametrised into modules and functions which can be reused agin in other model and make the program more compact and understandable.
-  \item[$\bullet$] It provides an interactive programming environment with all ESSI syntax available. Also several standard tools are provided to check element validity (jacobian, nodes, .. etc)
-  \item[$\bullet$] Last, it provides reduced model developmentg time by providing teh aforementioned features along with meaningful error reporting (of syntax and grammatical errors), a help system, command completion and highlighting for several open source and commercial text editors.
+  \item[$\bullet$] It provides modularity through the include directive/commands as in C which allows complex analysis cases to be parametrised into modules and functions which can be reused again in other model and make the program more compact and understandable.
+  \item[$\bullet$] It provides an interactive programming environment with all ESSI syntax available. Also several standard tools are provided to check element validity (jacobian, nodes, .. etc). Users can query nodes and elements to see if they are set to appropritae states.
+  \item[$\bullet$] Last, it provides reduced model developmentg time by providing tech aforementioned features along with meaningful error reporting (of syntax and grammatical errors), a help system, command completion and highlighting for several open source and commercial text editors.
 \end {itemize}
 
 \subsection{Installlation Process}
@@ -82,13 +83,133 @@ In addition to above general packages, for parallel version separate packages mu
 
 \lstinputlisting[language=bash, frame=single]{Boost.sh}
 
+\subsection {Running ESSI}
+ESSI's interactive mode can be invoked from the bash terminal by typing \textbf{essi}. 
 
-\section {Basic Syntax}
+\lstinputlisting[language=bash, frame=single,backgroundcolor=\color{grayish}]{ESSI_interactive_mode}
+
+\noindent From here commands can be input manually or a file may be included via the \textbf{include} command.
+
+\begin{lstlisting}[language=C,backgroundcolor=\color{grayish}]
+ESSI> include "foobar.fei";                         // includes the file foobar.fei
+\end{lstlisting}
+
+\noindent A file can be executed immediately through the command line \textbf{ESSI} by issuing \textbf{essi -f foobar.fei} to execute essi with foobar.fei as input. After executing the file, the interpreter will continue in interactive mode unless the command line \textbf{flag -n} or \textbf{ \textbf{-}-no-interactive} is set. A list of command line options can be seen by calling essi from the command line as \textbf{essi -h}.
+
+\lstinputlisting[language=bash, frame=single,backgroundcolor=\color{grayish}]{ESSI_interactive_commands}
+
+\noindent To exit \textbf{ESSI}, just type \textbf{bye;} in the prompt. 
+
+\begin{lstlisting}[language=C,backgroundcolor=\color{grayish}]
+ESSI> bye;                        
+\end{lstlisting}
+
+\noindent  If \textbf{bye;} command is included at the end of a script, the essi program will exit upon execution of the script regardless of any errors which occur during execution.
+
+
+\section {ESSI Basics - Domain Specific Language}
+ESSI has its own semantics ( \textbf{DSL - Domain Specific Language} ) developed using Yacc and Lex to make it more simplistic while preserving the traditional coding paradigms.
+   
+\subsection{ESSI Baisc Syntax}
 
 \begin{itemize}
 \item[$\bullet$]Each command line end with a \textbf{semicolon} (\textbf{;})
-\item[$\bullet$]Comments begin with either // or ! and last until the end of the line
+\item[$\bullet$]Line Comments begin with either \textbf{//} or \textbf{!}
+\item[$\bullet$]\textbf{Include} statements allow splitting into several files
+\item[$\bullet$]All variables are \textbf{double precision floats} and has a unit attached to it
+\item[$\bullet$]All standard \textbf{arithmetic operations} are implemented and are unit sensitive
+\item[$\bullet$]Internally, all variables are represented in standard units \textbf{[M L T]} or \textbf{[m s kg]} 
+\item[$\bullet$]Extra white spaces, tabulation does not affect the code but can be used to make the code readable and appear aesthetic. 
+\item[$\bullet$]Every model must have a name : \textbf{model name} 
+\textit{$<$"model\_name\_string"$>$}
 \end{itemize}
+
+\subsection{ESSI Datatypes}
+\textbf{ESSI} has basically three datatypes: \textbf{float}, \textbf{integer} and \textbf{string}. \textbf{Double precision float} is the most common datatype and quantifies every variable declard in ESSI. While \textbf{integer} and \textbf{string} are only used as a parameter for predefined functions/objects inside ESSI.
+
+\begin{lstlisting}[language=C]
+length = 7.6e-31;
+new loading stage "loading_stage_name-string";          // # string as loading stage name
+remove element # 1;                                     // # <element no> is a positive integer                      
+\end{lstlisting}
+
+\begin{itemize}
+\item[$\bullet$]\textbf{Float} datatype is by default double-precision 64-bit IEEE 754 floating point. 
+\item[$\bullet$]\textbf{Integers} are used to number the ESSI objects like nodes, elements, loads, contraints etc.
+\item[$\bullet$]\textbf{Strings} are similarly used as Integers to name stages, models, materials etc.
+\item[$\bullet$]ESSI also has functions that return boolean but of the form \textbf{1 and 0} meaning true and false.  
+\end{itemize}
+
+\begin{lstlisting}[language=C]
+if (isForce(L1))                  // isForce(L1) - will either return 0 or 1
+{                                 // 1 -> if L1 is a force quantity
+ print L1 ;                       // 0 -> if L1 is not a force quantity
+}                                 // print L1 - prints the value of variable L1
+\end{lstlisting}
+
+\subsection{ESSI Variables}
+
+A \textbf{ESSI variable} is a named storage location which can be accessed anytime/anywhere by/in our programs by just refering to it by its name. All ESSI variables are of double precision float datatype and are defined using assignment (\textbf{=}) operator.
+
+\begin{lstlisting}[language=C]
+ x = 7;                           // variable x is set to 7 which is ( unitless )
+ Modulus = 200e10;                // scientific notation is available
+ Length = 1.05*m                  // Length is set to 1.05 m (metres)
+\end{lstlisting}
+
+\noindent An important distinction of  \textbf{ESSI variable} is that they can have \textbf{units} associated with them like kg, m, mm, Pa etc. which can be seen in ESSI Units section.
+ESSI also has some \textbf{predefined locked variables} which act as reference or name to standard units.
+
+\begin{lstlisting}[language=Python]
+print x;
+print Length;
+\end{lstlisting}
+
+\noindent The \textbf{print} command displays the current value of a variable.
+
+\begin{lstlisting}[language=C,backgroundcolor=\color{grayish}]
+x = 7 []
+Length = 1.05 [m]
+\end{lstlisting}
+
+\noindent Here, the \textbf{[]} sign means that the quantities rae unitless. The command \textbf{whos} can be used to see all the currently defined variables and their values.
+
+\begin{lstlisting}[language=C,backgroundcolor=\color{grayish}]
+ESSI > whos;
+
+Declared variables:
+  * GPa = 1 [GPa]
+  * Hz = 1 [Hz]
+  * Km = 1 [km]
+    Length = 1.05 [m]
+  * MPa = 1 [MPa]
+  * N = 1 [N]
+  * Pa = 1 [Pa]
+  * cm = 1 [cm]
+  * g = 9.81 [m*s^-2]
+  * kN = 1 [kN]
+  * kPa = 1 [kPa]
+  * kg = 1 [kg]
+  * m = 1 [m]
+  * mm = 1 [mm]
+  * ms = 1 [ms]
+  * ns = 1 [ns]
+  * s = 1 [s]
+    x = 7 []
+
+  * = locked variable
+\end{lstlisting}
+
+
+\subsection{ESSI Units}
+
+\subsection{ESSI Operations}
+
+\subsection{ESSI Decision Making}
+
+\subsection{ESSI Input Files}
+
+\subsection{ESSI Command List}
 
 \section {Building Stages}
 \section {Building Material Model}

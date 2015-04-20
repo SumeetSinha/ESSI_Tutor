@@ -1,0 +1,18 @@
+The Finite Element Interpreter
+
+Real ESSI
+Earthquake Soil Structure Interaction Simulator
+
+Sequential processing mode.
+
+Compiled: Jun 18 2014 at 15:35:54
+Time Now: Jul 28 2014 at 16:08:23
+
+Static startup tips:
+* Remember: Every command ends with a semicolon ';'.
+* Type 'quit;' or 'exit;' to finish.
+* Run 'essi -h to see available command line options.
+
+Input: STDIN
+
+ESSI>
