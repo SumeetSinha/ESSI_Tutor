@@ -6,7 +6,7 @@
 \usepackage{devanagari}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.2,0.2,0.2}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \definecolor{ltgray}{rgb}{0.98,0.98,0.98}
 
@@ -17,7 +17,7 @@
   showstringspaces=false,
   columns=flexible,
   basicstyle={\small\ttfamily},
-  numberstyle=\tiny\color{gray},
+  numberstyle=\tiny\color{black},
   keywordstyle=\color{blue},
   commentstyle=\color{gray},
   stringstyle=\color{mauve},
@@ -51,7 +51,7 @@ since the language was developed in C using YACC and LEX tool, a lot of similari
 \end {itemize}
 
 \subsection{Installlation Process}
-Installation commands for Linux distribution systems (for Ubuntu) are given below.The whole installation steps for both Sequential and Paraller versions can be divided into four subsections. 
+Installation commands for Linux distribution systems (for Ubuntu) are given below.The whole installation steps for both Sequential and Paraller versions can be divided into three subsections. 
 
 \subsubsection{Updating GCC compiler version to 4.9}
 ESSI uses latest gcc compiler version 4.9. It is strongly suggested to update the compiles and listers.
@@ -69,6 +69,38 @@ ESSI requires a development version of BOOST C++ library ( http://www.boost.org 
 
 \lstinputlisting[language=bash, frame=single]{EssiLib.sh}
 
+\subsubsection{Setup for Sequential/Parallel Version}
+This section provides the final setup for started ESSI in sequential as well as parallel environment.\\
+
+\textbf{Sequential Version - }
+Sequential compilation of code is nothing new and has been there for since 1990's. To configure the sequential version, follow the steps as shown below.
+
+\lstinputlisting[language=bash, frame=single]{Boost.sh}
+
+\textbf{Parallel Version - }
+In addition to above general packages, for parallel version separate packages must be installed on ubuntu which are descibed in the code below. Compilation in parallel is done using available CPUs/cores (which can be defined in \textbf{make.sh} file). It is important to note that parallel compilation assumes a shared memory parallel (SMP) computer, where all the CPUs have access to the same memory pool. Number of CPUs will only change/improve the speed of compilation, while for building a parallel version of the Real ESSI Program, different approach is used (to be described later). Main executable program for the Real ESSI Simulator is in folder bin and is named essi. Shell script clean.sh removes all the object files for all libraries, while leaving the main executable essi untouched.
+
+\lstinputlisting[language=bash, frame=single]{Boost.sh}
+
+
 \section {Basic Syntax}
-\section {}
+
+\begin{itemize}
+\item[$\bullet$]Each command line end with a \textbf{semicolon} (\textbf{;})
+\item[$\bullet$]Comments begin with either // or ! and last until the end of the line
+\end{itemize}
+
+\section {Building Stages}
+\section {Building Material Model}
+\section {Modelling Nodes}
+\section {Modelling Finite Element}
+\section {Modelling Constraints}
+\section {Modelling Damping}
+\section {Modelling Static Loads}
+\section {Modelling Dynamic Loads}
+\section {Modelling prescribed Displacements}
+\section {Modelling Prescribed Displacements}
+\section {Modelling Simulation}
+\section {Modelling Output}
+
 \end{document}
